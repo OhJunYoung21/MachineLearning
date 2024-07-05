@@ -8,6 +8,7 @@ from nilearn.input_data import NiftiMapsMasker
 import numpy as np
 from keras import utils, Sequential
 from sklearn.model_selection import train_test_split
+import tensorflow as tf
 
 # 뇌를 smith_atlas 에 따라 70개의 구역 으로 나눈다.
 
@@ -94,43 +95,18 @@ def get_train_test(X, y, i, verbose=False):
 
     return X_train, X_test, y_train, y_test
 
+
 # create the model
 
-model = Sequential()
+model = tf.keras.models.Sequential()
 
 # LSTM layers -
 # Long Short-Term Memory layer - Hochreiter 1997.
-t_shape=np.array(all_subjects_data_reshaped).shape[1]
-RSN_shape=np.array(all_subjects_data_reshaped).shape[2]
+t_shape = np.array(all_subjects_data_reshaped).shape[1]
+RSN_shape = np.array(all_subjects_data_reshaped).shape[2]
 
-model.add(LSTM(units=70, # dimensionality of the output space
-               dropout=0.4, # Fraction of the units to drop (inputs)
-               recurrent_dropout=0.15, # Fraction of the units to drop (recurent state)
-               return_sequences=True, # return the last state in addition to the output
-               input_shape=(t_shape,RSN_shape)))
+model.add(tf.keras.layers.Flatten())
 
-model.add(LSTM(units=60,
-               dropout=0.4,
-               recurrent_dropout=0.15,
-               return_sequences=True))
+model.add(tf.keras.layers.Dense(128, activation='relu'))
+model.add(tf.keras.layers.Dense(128, activation='relu'))
 
-model.add(LSTM(units=50,
-               dropout=0.4,
-               recurrent_dropout=0.15,
-               return_sequences=True))
-
-model.add(LSTM(units=40,
-               dropout=0.4,
-               recurrent_dropout=0.15,
-               return_sequences=False))
-
-
-model.add(Dense(units=2,
-                activation="sigmoid"))
-
-model.compile(loss='binary_crossentropy',
-                optimizer=optimizers.Adam(lr=0.001),
-                metrics=['binary_accuracy'])
-
-#print(model.summary())
-plot_model(model, show_shapes=True, show_layer_names=True)
