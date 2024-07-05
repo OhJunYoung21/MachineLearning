@@ -6,6 +6,8 @@ rs_fMRI,task fMRI등을 처리하는 과정에서 ICA는 여러번 등장할 것
 
 한번 제대로 알아보자.
 
+---
+
 ### ICA(Independent Component Analysis) = 독립 성분 분석
 
 독립 성분 분석, 말로만 들어서는 감이 오지 않는다. 독립된 성분들을 분석한다는 뜻인가?
