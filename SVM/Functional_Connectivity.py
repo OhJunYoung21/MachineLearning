@@ -8,6 +8,9 @@ from nilearn.maskers import NiftiLabelsMasker
 import pandas as pd
 from scipy.stats import pearsonr
 import numpy as np
+from sklearn.preprocessing import LabelEncoder
+
+
 
 #yeo atlas를 dataset에서 가져온다.
 
@@ -63,10 +66,5 @@ correlation_matrix_HC = correlation_measure.fit_transform([time_series_HC])[0]
 
 np.fill_diagonal(correlation_matrix_RBD, 0)
 np.fill_diagonal(correlation_matrix_HC, 0)
-
-plotting.plot_matrix(
-    correlation_matrix_HC, labels=labels, colorbar=True, vmax=0.8, vmin=-0.8
-)
-plotting.show()
 
 
