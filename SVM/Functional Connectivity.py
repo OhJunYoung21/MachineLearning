@@ -7,6 +7,7 @@ from nilearn.connectome import ConnectivityMeasure
 from nilearn.maskers import NiftiLabelsMasker
 import pandas as pd
 from scipy.stats import pearsonr
+import numpy as np
 
 #yeo atlas를 dataset에서 가져온다.
 
@@ -17,6 +18,8 @@ atlas_filename = atlas["maps"]
 labels = atlas["labels"]
 
 # 4D image uploaded
+
+# 실제데이터의 motion parameter를 사용
 
 img_RBD = load_img('/Users/oj/Desktop/pre_BIDS/BIDS_RBD/sub-03/func/sub-03_task-BRAINMRINONCONTRASTDIFFUSION_acq-AxialfMRIrest_bold.nii')
 
@@ -45,6 +48,11 @@ correlation_measure = ConnectivityMeasure(
 )
 correlation_matrix_RBD = correlation_measure.fit_transform([time_series])[0]
 
-print(correlation_matrix_RBD.shape)
+np.fill_diagonal(correlation_matrix_RBD, 0)
+
+plotting.plot_matrix(
+    correlation_matrix_RBD, labels=labels, colorbar=True, vmax=0.8, vmin=-0.8
+)
+plotting.show()
 
 
