@@ -17,17 +17,25 @@ atlas_filename = atlas["maps"]
 # Loading atlas data stored in 'labels'
 labels = atlas["labels"]
 
-# 4D image uploaded
-
-# 실제데이터의 motion parameter를 사용
+# 4D RBD image uploaded
 
 img_RBD = load_img('/Users/oj/Desktop/pre_BIDS/BIDS_RBD/sub-03/func/sub-03_task-BRAINMRINONCONTRASTDIFFUSION_acq-AxialfMRIrest_bold.nii')
 
-pre_confounds = pd.read_csv('/Users/oj/Desktop/pre_BIDS/BIDS_RBD/sub-03/func/rp_sub-03_task-BRAINMRINONCONTRASTDIFFUSION_acq-AxialfMRIrest_bold.tsv',sep='\t')
+pre_confounds_RBD = pd.read_csv('/Users/oj/Desktop/pre_BIDS/BIDS_RBD/sub-03/func/rp_sub-03_task-BRAINMRINONCONTRASTDIFFUSION_acq-AxialfMRIrest_bold.tsv',sep='\t')
 
-confounds = pre_confounds.apply(pd.to_numeric,errors='coerce')
+confounds = pre_confounds_RBD.apply(pd.to_numeric,errors='coerce')
 
-confounds = confounds.fillna(0)
+confounds_rbd = confounds.fillna(0)
+
+# 4D HC image uploaded
+
+img_HC = load_img('/Users/oj/Desktop/pre_BIDS/BIDS_HC/sub-02/func/wasub-02_task-RESEARCHMRI_acq-AxialfMRIrest_bold.nii')
+
+pre_confounds = pd.read_csv('/Users/oj/Desktop/pre_BIDS/BIDS_HC/sub-02/func/rp_sub-02_task-RESEARCHMRI_acq-AxialfMRIrest_bold.tsv',sep='\t')
+
+confounds_hc = pre_confounds.apply(pd.to_numeric,errors='coerce')
+
+confounds_hc = confounds_hc.fillna(0)
 
 
 masker = NiftiMapsMasker(
@@ -38,7 +46,10 @@ masker = NiftiMapsMasker(
     verbose=5,
 )
 
-time_series = masker.fit_transform(img_RBD,confounds = confounds)
+time_series = masker.fit_transform(img_RBD,confounds = confounds_rbd)
+
+
+time_series_HC = masker.fit_transform(img_HC,confounds = confounds_hc)
 
 # Pearson 상관계수를 사용해서 각 region간의 상관계수를 계산함.
 
@@ -48,10 +59,13 @@ correlation_measure = ConnectivityMeasure(
 )
 correlation_matrix_RBD = correlation_measure.fit_transform([time_series])[0]
 
+correlation_matrix_HC = correlation_measure.fit_transform([time_series_HC])[0]
+
 np.fill_diagonal(correlation_matrix_RBD, 0)
+np.fill_diagonal(correlation_matrix_HC, 0)
 
 plotting.plot_matrix(
-    correlation_matrix_RBD, labels=labels, colorbar=True, vmax=0.8, vmin=-0.8
+    correlation_matrix_HC, labels=labels, colorbar=True, vmax=0.8, vmin=-0.8
 )
 plotting.show()
 
