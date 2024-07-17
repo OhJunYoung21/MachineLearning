@@ -18,11 +18,13 @@ labels = atlas["labels"]
 
 # 4D image uploaded
 
-img = load_img('/Users/oj/Desktop/post_fMRI_RBD/sub-01/ses-1/func/sub-01_ses-1_task-BRAINMRINONCONTRASTDIFFUSION_acq-AxialfMRIrest_space-MNI152NLin2009cAsym_desc-preproc_bold.nii')
+img_RBD = load_img('/Users/oj/Desktop/pre_BIDS/BIDS_RBD/sub-03/func/sub-03_task-BRAINMRINONCONTRASTDIFFUSION_acq-AxialfMRIrest_bold.nii')
 
-pre_confounds = pd.read_csv('/Users/oj/Desktop/post_fMRI_RBD/sub-01/ses-1/func/sub-01_ses-1_task-BRAINMRINONCONTRASTDIFFUSION_acq-AxialfMRIrest_desc-confounds_timeseries.tsv',sep="\t")
+pre_confounds = pd.read_csv('/Users/oj/Desktop/pre_BIDS/BIDS_RBD/sub-03/func/rp_sub-03_task-BRAINMRINONCONTRASTDIFFUSION_acq-AxialfMRIrest_bold.tsv',sep='\t')
 
-confounds = pre_confounds.fillna(0)
+confounds = pre_confounds.apply(pd.to_numeric,errors='coerce')
+
+confounds = confounds.fillna(0)
 
 
 masker = NiftiMapsMasker(
@@ -33,7 +35,7 @@ masker = NiftiMapsMasker(
     verbose=5,
 )
 
-time_series = masker.fit_transform(img,confounds = confounds)
+time_series = masker.fit_transform(img_RBD,confounds = confounds)
 
 # Pearson 상관계수를 사용해서 각 region간의 상관계수를 계산함.
 
@@ -41,8 +43,8 @@ correlation_measure = ConnectivityMeasure(
     kind="correlation",
     standardize="zscore_sample",
 )
-correlation_matrix = correlation_measure.fit_transform([time_series])[0]
+correlation_matrix_RBD = correlation_measure.fit_transform([time_series])[0]
 
-print(correlation_matrix.shape)
+print(correlation_matrix_RBD.shape)
 
 
