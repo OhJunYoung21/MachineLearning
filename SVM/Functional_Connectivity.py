@@ -26,6 +26,7 @@ masker = NiftiMapsMasker(
     verbose=5,
 )
 
+## 각 함수는 FC를 추출하는 코드이다. 추출한 FC를 벡터화 하여 데이터프레임에 넣는다.
 
 def RBD_FC(image_route, confound_route):
     img = load_img(
