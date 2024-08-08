@@ -3,6 +3,8 @@ import Functional_Connectivity
 import os
 import numpy as np
 
+# 데이터를 넣을 데이터 프레임을 하나 만든다.
+
 jun_df = pd.DataFrame(index=None)
 
 jun_df['FC'] = None
