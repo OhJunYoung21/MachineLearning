@@ -1,12 +1,15 @@
 import tensorflow as tf
-import numpy as np
-import matplotlib.pyplot as plt
-import random
-import os
-from sklearn.model_selection import train_test_split
-from tensorflow.keras import Model, layers
-import nilearn
 
+model = tf.keras.models.Sequential([
+    tf.keras.layers.Conv2D(16, (3, 3), activation='relu', input_shape=(150, 150, 1)),
+    tf.keras.layers.MaxPooling2D(2, 2),
+    tf.keras.layers.Conv2D(32, (3, 3), activation='relu'),
+    tf.keras.layers.MaxPooling2D(2, 2),
+    tf.keras.layers.Conv2D(32, (3, 3), activation='relu'),
+    tf.keras.layers.MaxPooling2D(2, 2),
+    tf.keras.layers.Flatten(),
+    tf.keras.layers.Dense(512, activation='relu'),
+    tf.keras.layers.Dense(1, activation='sigmoid')
+])
 
-
-
+print(model.summary())
