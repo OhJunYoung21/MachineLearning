@@ -14,6 +14,10 @@ reho = []
 alff = []
 fc = []
 
+pilot_fc = pd.read_csv(
+    '/Users/oj/Desktop/post_fMRI/xcp_d_HC/sub-03/func/sub-03_task-BRAINMRINONCONTRASTDIFFUSION_acq-AxialfMRIrest_space-MNI152NLin2009cAsym_seg-Tian_stat-reho_bold.tsv',
+    sep='\t')
+
 pilot_reho = pd.read_csv(
     '/Users/oj/Desktop/post_fMRI/xcp_d_HC/sub-03/func/sub-03_task-BRAINMRINONCONTRASTDIFFUSION_acq-AxialfMRIrest_space-MNI152NLin2009cAsym_seg-Tian_stat-reho_bold.tsv',
     sep='\t')
