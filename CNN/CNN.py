@@ -26,6 +26,6 @@ model.add(layers.Flatten())
 model.add(layers.Dense(512, activation='relu'))
 
 # 출력 레이어 (이진 분류)
-model.add(layers.Dense(1, activation='softmax'))
+model.add(layers.Dense(2, activation='softmax'))
 
 print(model.summary())
