@@ -32,7 +32,14 @@ for file_path in alff_path:
 
 for file_path in fc_path:
     data = pd.read_csv(file_path, sep='\t')
-    fc.append(np.array(data.iloc[0]))
+    fc.append(data.iloc[:,1:].values)
+
+
+for k in range(len(reho)):
+    pilot_data.loc[k] = [fc[k],alff[k],reho[k],1]
+
+
+print(pilot_data.head())
 
 
 
