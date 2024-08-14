@@ -1,5 +1,10 @@
 import tensorflow as tf
 from tensorflow.keras import layers, models
+from Data.pilot_data import pilot_data
+import keras
+
+import pandas as pd
+import numpy as np
 
 model = models.Sequential()
 
@@ -19,6 +24,9 @@ model.add(layers.MaxPooling2D((2, 2)))
 model.add(layers.Conv2D(128, (3, 3), activation='relu'))
 model.add(layers.MaxPooling2D((2, 2)))
 
+
+model.add(keras.layers.Dropout(0.25)())
+
 # Flatten 레이어로 1D 벡터로 변환
 model.add(layers.Flatten())
 
@@ -28,4 +36,10 @@ model.add(layers.Dense(512, activation='relu'))
 # 출력 레이어 (이진 분류)
 model.add(layers.Dense(2, activation='softmax'))
 
-print(model.summary())
+model.compile(optimizer='adam',
+              loss='sparse_categorical_crossentropy',
+              metrics=['accuracy'])
+
+X,y = pilot_data['FC'], pilot_data['STATUS']
+
+
