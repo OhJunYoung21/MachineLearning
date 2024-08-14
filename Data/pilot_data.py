@@ -1,6 +1,7 @@
 import pandas as pd
 import os
 import numpy as np
+import glob
 
 pilot_data = pd.DataFrame(index=None)
 
@@ -9,31 +10,34 @@ pilot_data['ALFF'] = None
 pilot_data['REHO'] = None
 pilot_data['STATUS'] = None
 
+root_dir = '/Users/oj/Desktop/post_fMRI/post_XCP-D_RBD'
 
-reho = []
 alff = []
+reho = []
 fc = []
 
-pilot_fc = pd.read_csv(
-    '/Users/oj/Desktop/post_fMRI/xcp_d_HC/sub-03/func/sub-03_task-BRAINMRINONCONTRASTDIFFUSION_acq-AxialfMRIrest_space-MNI152NLin2009cAsym_seg-Tian_stat-reho_bold.tsv',
-    sep='\t')
+## 디렉토리내의 sub들의 reho를 전부 추출해서 reho 리스트안에 넣는다.
 
-pilot_reho = pd.read_csv(
-    '/Users/oj/Desktop/post_fMRI/xcp_d_HC/sub-03/func/sub-03_task-BRAINMRINONCONTRASTDIFFUSION_acq-AxialfMRIrest_space-MNI152NLin2009cAsym_seg-Tian_stat-reho_bold.tsv',
-    sep='\t')
+reho_path = glob.glob(os.path.join(root_dir, 'sub-*', 'func', '*_seg-Tian_stat-reho_bold.tsv'))
+alff_path = glob.glob(os.path.join(root_dir, 'sub-*', 'func', '*_seg-Tian_stat-alff_bold.tsv'))
+fc_path = glob.glob(os.path.join(root_dir, 'sub-*', 'func', '*_seg-Tian_stat-pearsoncorrelation_relmat.tsv'))
 
-pilot_alff = pd.read_csv('/Users/oj/Desktop/post_fMRI/xcp_d_HC/sub-03/func/sub-03_task-BRAINMRINONCONTRASTDIFFUSION_acq-AxialfMRIrest_space-MNI152NLin2009cAsym_seg-Tian_stat-alff_bold.tsv',
-                         sep='\t')
+for file_path in reho_path:
+    data = pd.read_csv(file_path, sep='\t')
+    reho.append(np.array(data.iloc[0]))
+
+for file_path in alff_path:
+    data = pd.read_csv(file_path, sep='\t')
+    alff.append(np.array(data.iloc[0]))
+
+for file_path in fc_path:
+    data = pd.read_csv(file_path, sep='\t')
+    fc.append(np.array(data.iloc[0]))
 
 
-reho.append(np.array(pilot_reho.iloc[0]))
-alff.append(np.array(pilot_alff.iloc[0]))
+
+## 디렉토리내의 sub들의 alff를 전부 추출해서 reho 리스트안에 넣는다.
+
+## 디렉토리내의 sub들의 fc를 전부 추출해서 reho 리스트안에 넣는다.
 
 
-for j in reho:
-    pilot_data = pd.concat([pilot_data, pd.DataFrame({'REHO':[j], 'STATUS':[0]})], ignore_index=True)
-
-for j in alff:
-    pilot_data = pd.concat([pilot_data, pd.DataFrame({'ALFF': [j], 'STATUS': [0]})], ignore_index=True)
-
-print(pilot_data.head())
