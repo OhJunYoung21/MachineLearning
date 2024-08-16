@@ -2,7 +2,7 @@ import numpy as np
 from sklearn import svm
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report,accuracy_score
-from Data.pilot_data import pilot_data
+from Data.pilot_data_RBD import pilot_data
 
 data = pilot_data
 
