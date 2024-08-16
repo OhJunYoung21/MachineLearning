@@ -37,7 +37,7 @@ for file_path in fc_path_rbd:
 for k in range(len(reho)):
     pilot_data.loc[k] = [fc[k], alff[k], reho[k], 1]
 
-print(pilot_data.head())
+## print(pilot_data.head())
 
 ## 디렉토리내의 sub들의 alff를 전부 추출해서 reho 리스트안에 넣는다.
 
