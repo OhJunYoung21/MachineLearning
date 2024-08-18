@@ -29,4 +29,4 @@ for file_path in fc_path_hc:
 for k in range(len(reho)):
     pilot_data.loc[k + 3] = [fc[k], alff[k], reho[k], 0]
 
-print(pilot_data.head())
+print(len(pilot_data['ALFF'][0]))
