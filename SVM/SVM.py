@@ -3,7 +3,7 @@ from sklearn import svm
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report,accuracy_score
 from Data.pilot_data_HC import pilot_data
-from sklearn.model_selection import cross_val_score
+from sklearn import metrics as mt
 
 data = pilot_data
 
@@ -15,9 +15,12 @@ X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_
 
 model = svm.SVC(kernel='linear')
 
-score = cross_val_score(model, X_train, y_train, cv=5)
-'''
 model.fit(X_train, y_train)
-'''
-print(score)
+
+predicted_result = model.predict(X_test)
+
+
+scores = mt.classification_report(y_test, predicted_result)
+
+print(scores)
 
