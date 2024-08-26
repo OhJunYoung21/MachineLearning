@@ -27,6 +27,6 @@ for file_path in fc_path_hc:
     fc.append(data.iloc[:, 1:].values)
 
 for k in range(len(reho)):
-    pilot_data.loc[k + 3] = [fc[k], alff[k], reho[k], 0]
+    pilot_data.loc[k + 5] = [fc[k], alff[k], reho[k], 0]
 
-print(pilot_data['ALFF'][0])
+print(pilot_data)
