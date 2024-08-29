@@ -11,7 +11,7 @@ X = np.array([x.flatten() for x in pilot_data['FC']])
 y = np.array(pilot_data['STATUS'])
 
 #k_fold 교차검증 실시할것(cross_validation)
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=0)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.4,  random_state=0)
 
 model = svm.SVC(kernel='linear')
 
@@ -19,8 +19,7 @@ model.fit(X_train, y_train)
 
 predicted_result = model.predict(X_test)
 
-
 scores = mt.classification_report(y_test, predicted_result)
-
+'''
 print(scores)
-
+'''
