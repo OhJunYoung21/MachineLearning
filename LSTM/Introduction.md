@@ -10,3 +10,4 @@ LSTM을 알기 전에, 우리는 RNN이란 것을 먼저 알아야 한다.
 
 RNN = Recurrent Neural Network, 한국말로 말하자면 반복하는 신경망이란 뜻이다.
 
+### CNN-LSTM이란 무엇인가?
