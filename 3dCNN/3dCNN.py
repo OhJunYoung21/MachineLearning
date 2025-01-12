@@ -1,3 +1,6 @@
+import torch
+from torch import nn
+
 ## 3dCNN모델을 정의한다.
 
 class Simple3DCNN(nn.Module):
