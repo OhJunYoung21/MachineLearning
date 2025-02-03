@@ -35,10 +35,15 @@ confounds = pd.read_csv(confound_path, sep='\t')
 confounds.replace([np.inf, -np.inf], np.nan, inplace=True)
 confounds.fillna(0, inplace=True)
 
-shen_atlas = input_data.NiftiLabelsMasker(labels_img=atlas_path, standardize=True)
+shen_atlas = input_data.NiftiLabelsMasker(labels_img=atlas_path, standardize=True, memotry='nilearn_cache')
 
 data = image.load_img(path)
 
 time_series = shen_atlas.fit_transform(data, confounds=confounds)
 
-print(time_series.shape)
+correlation_measure = ConnectivityMeasure(kind='correlation')
+
+corr_matrix = correlation_measure.fit_transform([time_series])
+
+plotting.plot_matrix(corr_matrix[0], labels=shen_atlas.labels, colorbar=True, vmax=1.5, vmin=0.0)
+plotting.show()
