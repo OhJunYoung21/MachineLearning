@@ -1,5 +1,6 @@
 import os
 import torch
+import pandas as pd
 from torch import nn
 import numpy as np
 import matplotlib.pyplot as plt
@@ -7,6 +8,8 @@ from tqdm import tqdm
 
 from nilearn import datasets
 from nilearn import plotting
+from nilearn import input_data
+from nilearn import image
 from nilearn.input_data import NiftiMapsMasker
 from nilearn.connectome import ConnectivityMeasure
 
@@ -21,11 +24,21 @@ import networkx as nx
 ## from_numpy_matrix는 더이상 지원되지 않고, 대신 from_numpy_array가 유사한 기능을 수행함.
 from networkx.convert_matrix import from_numpy_array
 
-corr_measure = ConnectivityMeasure(kind='correlation')
-pcorr_measure = ConnectivityMeasure(kind='partial correlation')
+atlas_path = '/Users/oj/Desktop/Yoo_Lab/atlas/shen_2mm_268_parcellation.nii'
 
-## time_series에는 fMRI데이터를 넣어준다.4D image이기때문에 각 voxel은 시계열데이터를 가질 것이다.
-corr_matrices = corr_measure.fit_transform(time_series)
-pcorr_matrices = pcorr_measure.fit_transform(time_series)
+path = '/Users/oj/Desktop/Yoo_Lab/Yoo_data/RBD_PET_positive/RBD_PET_positive/sub-14/func/sub-14_task-BRAINMRINONCONTRASTDIFFUSION_acq-AxialfMRIrest_space-MNI152NLin2009cAsym_desc-preproc_bold.nii.gz'
 
-avg_pcorr_matrix = np.mean(pcorr_matrices, axis=0)
+confound_path = '/Users/oj/Desktop/Yoo_Lab/Yoo_data/RBD_PET_positive/RBD_PET_positive/sub-14/func/sub-14_task-BRAINMRINONCONTRASTDIFFUSION_acq-AxialfMRIrest_desc-confounds_timeseries.tsv'
+
+confounds = pd.read_csv(confound_path, sep='\t')
+
+confounds.replace([np.inf, -np.inf], np.nan, inplace=True)
+confounds.fillna(0, inplace=True)
+
+shen_atlas = input_data.NiftiLabelsMasker(labels_img=atlas_path, standardize=True)
+
+data = image.load_img(path)
+
+time_series = shen_atlas.fit_transform(data, confounds=confounds)
+
+print(time_series.shape)
