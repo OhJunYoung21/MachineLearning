@@ -16,6 +16,9 @@ root_dir = '/Users/oj/Desktop/Yoo_Lab/Yoo_data/RBD_PET_positive'
 atlas_path = '/Users/oj/Desktop/Yoo_Lab/atlas/shen_2mm_268_parcellation.nii'
 
 avg_pcorr_file = f'{root_dir}/GNN/avg_pcorr.csv'
+corr_matrices_dir = f'{root_dir}/GNN/corr_matrices'
+pcorr_matrices_dir = f'{root_dir}/GNN/pcorr_matrices'
+labels_file = f'{root_dir}/GNN/labels/labels.csv'
 
 fMRI_img = glob.glob(os.path.join(root_dir, 'sub-*', 'func',
                                   'sub-*_task-BRAINMRINONCONTRASTDIFFUSION_acq-AxialfMRIrest_space-MNI152NLin2009cAsym_desc-preproc_bold.nii.gz')) + glob.glob(
@@ -74,4 +77,8 @@ pcorr_measure = ConnectivityMeasure(kind='partial correlation')
 corr_matrices = corr_measure.fit_transform(time_series_list)
 pcorr_matrices = pcorr_measure.fit_transform(time_series_list)
 
-print(corr_matrices[0].shape)
+'''
+for i in range(0, len(corr_matrices)):
+    np.savetxt(f'{corr_matrices_dir}/corr_{i + 1:02d}.csv', corr_matrices[i], delimiter=',')
+    np.savetxt(f'{pcorr_matrices_dir}/pcorr_{i + 1:02d}.csv', pcorr_matrices[i], delimiter=',')
+'''
