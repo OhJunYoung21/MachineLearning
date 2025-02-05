@@ -32,8 +32,8 @@ class DevDataset(InMemoryDataset):
                 graphs out of connectivity matrices.
         """
 
-        corr_path_list = sorted(os.listdir(corr_matrices_dir), key=lambda x: int(x[5:7]))
-        pcorr_path_list = sorted(os.listdir(pcorr_matrices_dir), key=lambda x: int(x[5:7]))
+        corr_path_list = sorted(os.listdir(corr_matrices_dir), key=lambda x: int(x[5:6]))
+        pcorr_path_list = sorted(os.listdir(pcorr_matrices_dir), key=lambda x: int(x[5:6]))
 
         graph = []
 
