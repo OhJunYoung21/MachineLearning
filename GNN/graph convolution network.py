@@ -26,24 +26,7 @@ from networkx.convert_matrix import from_numpy_array
 
 atlas_path = '/Users/oj/Desktop/Yoo_Lab/atlas/shen_2mm_268_parcellation.nii'
 
-path = '/Users/oj/Desktop/Yoo_Lab/Yoo_data/RBD_PET_positive/RBD_PET_positive/sub-14/func/sub-14_task-BRAINMRINONCONTRASTDIFFUSION_acq-AxialfMRIrest_space-MNI152NLin2009cAsym_desc-preproc_bold.nii.gz'
+data, slice = torch.load('dataset_pyg/processed/data.pt')
 
-confound_path = '/Users/oj/Desktop/Yoo_Lab/Yoo_data/RBD_PET_positive/RBD_PET_positive/sub-14/func/sub-14_task-BRAINMRINONCONTRASTDIFFUSION_acq-AxialfMRIrest_desc-confounds_timeseries.tsv'
-
-confounds = pd.read_csv(confound_path, sep='\t')
-
-confounds.replace([np.inf, -np.inf], np.nan, inplace=True)
-confounds.fillna(0, inplace=True)
-
-shen_atlas = input_data.NiftiLabelsMasker(labels_img=atlas_path, standardize=True, memotry='nilearn_cache')
-
-data = image.load_img(path)
-
-time_series = shen_atlas.fit_transform(data, confounds=confounds)
-
-correlation_measure = ConnectivityMeasure(kind='correlation')
-
-corr_matrix = correlation_measure.fit_transform([time_series])
-
-plotting.plot_matrix(corr_matrix[0], labels=shen_atlas.labels, colorbar=True, vmax=1.5, vmin=0.0)
-plotting.show()
+print(data)
+print(slice)
