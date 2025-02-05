@@ -76,9 +76,3 @@ pcorr_measure = ConnectivityMeasure(kind='partial correlation')
 
 corr_matrices = corr_measure.fit_transform(time_series_list)
 pcorr_matrices = pcorr_measure.fit_transform(time_series_list)
-
-'''
-for i in range(0, len(corr_matrices)):
-    np.savetxt(f'{corr_matrices_dir}/corr_{i + 1:02d}.csv', corr_matrices[i], delimiter=',')
-    np.savetxt(f'{pcorr_matrices_dir}/pcorr_{i + 1:02d}.csv', pcorr_matrices[i], delimiter=',')
-'''
