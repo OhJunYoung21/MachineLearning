@@ -33,7 +33,7 @@ class DevDataset(InMemoryDataset):
         """
 
         corr_path_list = sorted(os.listdir(corr_matrices_dir), key=lambda x: int(x[5:6]))
-        pcorr_path_list = sorted(os.listdir(pcorr_matrices_dir), key=lambda x: int(x[5:6]))
+        pcorr_path_list = sorted(os.listdir(pcorr_matrices_dir), key=lambda x: int(x[6:8]))
 
         graph = []
 
@@ -73,13 +73,13 @@ class DevDataset(InMemoryDataset):
             graph.append(pcorr_matrix_data)
 
         data, slices = self.collate(graph)
-        torch.save((data, slices), self.processed_path[0])
+        torch.save((data, slices), self.processed_paths[0])
 
 
-dataset = DevDataset('dataset_pyg')
+dataset = DevDataset(root='/Users/oj/Desktop/Yoo_Lab/Yoo_data/RBD_PET_positive/GNN')
 dataset = dataset.shuffle()
 
-train_share = int(len(dataset) * 0.8)
+train_share = int(len(dataset) * 0.7)
 
 train_dataset = dataset[:train_share]
 test_dataset = dataset[train_share:]
