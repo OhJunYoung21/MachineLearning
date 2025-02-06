@@ -13,15 +13,8 @@ import re
 
 root_dir = '/Users/oj/Desktop/Yoo_Lab/Yoo_data/RBD_PET_positive'
 
-atlas_path = '/Users/oj/Desktop/Yoo_Lab/atlas/shen_2mm_268_parcellation.nii'
-
-avg_pcorr_file = f'{root_dir}/GNN/avg_pcorr.csv'
-corr_matrices_dir = f'{root_dir}/GNN/corr_matrices'
-pcorr_matrices_dir = f'{root_dir}/GNN/pcorr_matrices'
-labels_file = f'{root_dir}/GNN/labels/labels.csv'
-
-fMRI_img = glob.glob(os.path.join(root_dir, 'sub-*', 'func',
-                                  'sub-*_task-BRAINMRINONCONTRASTDIFFUSION_acq-AxialfMRIrest_space-MNI152NLin2009cAsym_desc-preproc_bold.nii.gz')) + glob.glob(
+fMRI_img_positive = glob.glob(os.path.join(root_dir, 'sub-*', 'func',
+                                           'sub-*_task-BRAINMRINONCONTRASTDIFFUSION_acq-AxialfMRIrest_space-MNI152NLin2009cAsym_desc-preproc_bold.nii.gz')) + glob.glob(
     os.path.join(root_dir, 'sub-*', 'func',
                  'sub-*_task-BRAINMRINONCONTRAST_acq-WIPfMRIRESTCLEAR_space-MNI152NLin2009cAsym_desc-preproc_bold.nii.gz')) + glob.glob(
     os.path.join(root_dir, 'sub-*', 'func',
@@ -33,8 +26,8 @@ fMRI_img = glob.glob(os.path.join(root_dir, 'sub-*', 'func',
     os.path.join(root_dir, 'sub-*', 'func',
                  'sub-*_task-RESEARCHMRI_acq-AxialfMRIrest_space-MNI152NLin2009cAsym_desc-preproc_bold.nii.gz'))
 
-raw_confounds = glob.glob(os.path.join(root_dir, 'sub-*', 'func',
-                                       'sub-*_task-BRAINMRINONCONTRASTDIFFUSION_acq-AxialfMRIrest_desc-confounds_timeseries.tsv')) + glob.glob(
+raw_confounds_positive = glob.glob(os.path.join(root_dir, 'sub-*', 'func',
+                                                'sub-*_task-BRAINMRINONCONTRASTDIFFUSION_acq-AxialfMRIrest_desc-confounds_timeseries.tsv')) + glob.glob(
     os.path.join(root_dir, 'sub-*', 'func',
                  'sub-*_task-BRAINMRINONCONTRAST_acq-WIPfMRIRESTCLEAR_desc-confounds_timeseries.tsv')) + glob.glob(
     os.path.join(root_dir, 'sub-*', 'func',
@@ -46,34 +39,52 @@ raw_confounds = glob.glob(os.path.join(root_dir, 'sub-*', 'func',
     os.path.join(root_dir, 'sub-*', 'func',
                  'sub-*_task-RESEARCHMRI_acq-AxialfMRIrest_desc-confounds_timeseries.tsv'))
 
-raw_confounds = sorted(raw_confounds)
-fMRI_img = sorted(fMRI_img)
+positive_path = '/Users/oj/Desktop/Yoo_Lab/Yoo_data/RBD_PET_positive'
 
-shen_atlas = input_data.NiftiLabelsMasker(labels_img=atlas_path, standardize=True, memotry='nilearn_cache')
+positive_folders = [name for name in os.listdir(positive_path)
+                    if os.path.isdir(os.path.join(positive_path, name)) and name.startswith("sub-")]
 
-time_series_list = []
+'''
+nagative_path = '/Users/oj/Desktop/Yoo_Lab/Yoo_data/RBD_PET_negative'
 
-for index in range(len(raw_confounds)):
-    fmri_img = fMRI_img[index]
-    confounds = pd.read_csv(raw_confounds[index], sep='\t')
+negative_folders = [name for name in os.listdir(positive_path)
+                    if os.path.isdir(os.path.join(positive_path, name)) and name.startswith("sub-")]
+'''
+
+
+class Data:
+    def __init__(self, func=None, confounds=None, phenotypic=None):
+        self.func = func
+        self.phenotypic = phenotypic
+        self.confounds = confounds
+
+
+fMRI_img_positive = sorted(fMRI_img_positive)
+
+func = []
+
+for j in fMRI_img_positive:
+    func_img = image.load_img(j)
+    func.append(func_img)
+
+confounds_list = []
+
+for k in range(len(raw_confounds_positive)):
+    confounds = pd.read_csv(raw_confounds_positive[k], sep='\t')
 
     confounds.replace([np.inf, -np.inf], np.nan, inplace=True)
     confounds.fillna(0, inplace=True)
 
-    data = image.load_img(fmri_img)
+    confounds_list.append(confounds)
 
-    time_series = shen_atlas.fit_transform(data, confounds=confounds)
+subject_numbers = [f"{i:02d}" for i in range(1, len(positive_folders) + 1)]
 
-    time_series_list.append(time_series)
+labels = [1 for i in range(len(positive_folders))]
 
-    '''
-    np.savetxt(f'/Users/oj/Desktop/Yoo_Lab/Yoo_data/RBD_PET_positive/GNN/time_series/time_series_{index + 1:02d}.csv',
-               time_series,
-               delimiter=',')
-    '''
+phenotypic = [[subject_numbers[i], labels[i]] for i in range(len(positive_folders))]
 
-corr_measure = ConnectivityMeasure(kind='correlation')
-pcorr_measure = ConnectivityMeasure(kind='partial correlation')
+data = Data(func=func, confounds=confounds_list, phenotypic=phenotypic)
 
-corr_matrices = corr_measure.fit_transform(time_series_list)
-pcorr_matrices = pcorr_measure.fit_transform(time_series_list)
+print(data.func)
+print(data.phenotypic)
+print(data.confounds)
