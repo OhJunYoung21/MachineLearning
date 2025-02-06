@@ -79,12 +79,8 @@ for k in range(len(raw_confounds_positive)):
 
 subject_numbers = [f"{i:02d}" for i in range(1, len(positive_folders) + 1)]
 
-labels = [1 for i in range(len(positive_folders))]
+labels = ["positive" for i in range(len(positive_folders))]
 
 phenotypic = [[subject_numbers[i], labels[i]] for i in range(len(positive_folders))]
 
-data = Data(func=func, confounds=confounds_list, phenotypic=phenotypic)
-
-print(data.func)
-print(data.phenotypic)
-print(data.confounds)
+dataset = Data(func=func, confounds=confounds_list, phenotypic=phenotypic)

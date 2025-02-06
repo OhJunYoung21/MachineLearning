@@ -32,7 +32,7 @@ class DevDataset(InMemoryDataset):
                 graphs out of connectivity matrices.
         """
 
-        corr_path_list = sorted(os.listdir(corr_matrices_dir), key=lambda x: int(x[5:6]))
+        corr_path_list = sorted(os.listdir(corr_matrices_dir), key=lambda x: int(x[5:7]))
         pcorr_path_list = sorted(os.listdir(pcorr_matrices_dir), key=lambda x: int(x[6:8]))
 
         graph = []
@@ -76,10 +76,11 @@ class DevDataset(InMemoryDataset):
         torch.save((data, slices), self.processed_paths[0])
 
 
-dataset = DevDataset(root='/Users/oj/Desktop/Yoo_Lab/Yoo_data/RBD_PET_positive/GNN')
+dataset = DevDataset('dataset_pyg')
 dataset = dataset.shuffle()
 
-train_share = int(len(dataset) * 0.7)
+# Train/test split (80-20)
+train_share = int(len(dataset) * 0.8)
 
 train_dataset = dataset[:train_share]
 test_dataset = dataset[train_share:]

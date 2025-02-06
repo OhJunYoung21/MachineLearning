@@ -24,9 +24,21 @@ import networkx as nx
 ## from_numpy_matrix는 더이상 지원되지 않고, 대신 from_numpy_array가 유사한 기능을 수행함.
 from networkx.convert_matrix import from_numpy_array
 
-atlas_path = '/Users/oj/Desktop/Yoo_Lab/atlas/shen_2mm_268_parcellation.nii'
+from GNN import DevDataset
 
-data, slice = torch.load('dataset_pyg/processed/data.pt')
+dataset = DevDataset('dataset_pyg')
+dataset = dataset.shuffle()
 
-print(data)
-print(slice)
+train_share = int(len(dataset) * 0.8)
+
+train_dataset = dataset[:train_share]
+test_dataset = dataset[train_share:]
+
+
+class GraphNetwork(torch.nn.Module):
+    def __init__(self, hidden_channels):
+        super().__init()
+
+        self.mlp1 = Sequential(Linear(2 * dataset.num_node_features, hidden_channels), ReLU())
+        self.mlp2 = Sequential(torch.nn.Linear(2 * hidden_channels, hidden_channels), ReLU())
+        self.mlp3 = Sequential(torch.nn.Linear(2 * hidden_channels, hidden_channels), ReLU())
