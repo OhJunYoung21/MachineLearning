@@ -32,8 +32,11 @@ class DevDataset(InMemoryDataset):
                 graphs out of connectivity matrices.
         """
 
-        corr_path_list = sorted(os.listdir(corr_matrices_dir), key=lambda x: int(x[5:7]))
-        pcorr_path_list = sorted(os.listdir(pcorr_matrices_dir), key=lambda x: int(x[6:8]))
+        corr_path_list = sorted(os.listdir(corr_matrices_dir))[1:]
+        pcorr_path_list = sorted(os.listdir(pcorr_matrices_dir))[1:]
+
+        corr_path_list = sorted(corr_path_list, key=lambda x: int(x[5:6]))
+        pcorr_path_list = sorted(pcorr_path_list, key=lambda x: int(x[6:8]))
 
         graph = []
 
@@ -76,11 +79,12 @@ class DevDataset(InMemoryDataset):
         torch.save((data, slices), self.processed_paths[0])
 
 
-dataset = DevDataset('dataset_pyg')
-dataset = dataset.shuffle()
+if __name__ == "__main__":
+    dataset = DevDataset('dataset_pyg')
+    dataset = dataset.shuffle()
 
-# Train/test split (80-20)
-train_share = int(len(dataset) * 0.8)
+    # Train/test split (80-20)
+    train_share = int(len(dataset) * 0.8)
 
-train_dataset = dataset[:train_share]
-test_dataset = dataset[train_share:]
+    train_dataset = dataset[:train_share]
+    test_dataset = dataset[train_share:]

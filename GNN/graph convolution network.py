@@ -24,21 +24,19 @@ import networkx as nx
 ## from_numpy_matrix는 더이상 지원되지 않고, 대신 from_numpy_array가 유사한 기능을 수행함.
 from networkx.convert_matrix import from_numpy_array
 
-from GNN import DevDataset
+from DevDataset import DevDataset
+from GNN import dataset_pyg
 
 dataset = DevDataset('dataset_pyg')
-dataset = dataset.shuffle()
-
-train_share = int(len(dataset) * 0.8)
-
-train_dataset = dataset[:train_share]
-test_dataset = dataset[train_share:]
 
 
 class GraphNetwork(torch.nn.Module):
-    def __init__(self, hidden_channels):
-        super().__init()
 
-        self.mlp1 = Sequential(Linear(2 * dataset.num_node_features, hidden_channels), ReLU())
+    def __init__(self, hidden_channels):
+        super().__init__()
+
+        ## Initialize MLPs used by EdgeConv layers
+
+        self.mlp1 = Sequential(Linear(2 * dataset.num_node_features), ReLU(), )
         self.mlp2 = Sequential(torch.nn.Linear(2 * hidden_channels, hidden_channels), ReLU())
         self.mlp3 = Sequential(torch.nn.Linear(2 * hidden_channels, hidden_channels), ReLU())
